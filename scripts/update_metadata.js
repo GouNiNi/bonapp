@@ -8,6 +8,9 @@ async function updateMetadata() {
 
     const iconPaths = [
         'app-icon.svg',
+        'pwa-192x192.png',
+        'icons/icon-192x192.png',
+        'pwa-512x512.png',
         'apple-touch-icon.png',
         'icons/icon-512x512.png',
         'favicon.svg',
@@ -24,11 +27,14 @@ async function updateMetadata() {
         for (const iconPath of iconPaths) {
             try {
                 const iconUrl = `${app.url}${iconPath}`;
-                const response = await fetch(iconUrl, { method: 'HEAD' });
+                const response = await fetch(iconUrl, { method: 'GET' }); // USE GET to check content
                 if (response.ok) {
-                    app.icon = iconUrl;
-                    console.log(`  Found icon: ${iconUrl}`);
-                    break;
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && (contentType.includes('image') || contentType.includes('svg'))) {
+                        app.icon = iconUrl;
+                        console.log(`  Found icon: ${iconUrl} (${contentType})`);
+                        break;
+                    }
                 }
             } catch (e) {
                 // Ignore errors

@@ -1,0 +1,30 @@
+[
+  {
+    "url": "https://preachpad.geekarea.fr/",
+    "name": "PreachPad",
+    "description": "Tel Moïse qui descendait du mont Sinaï avec les tables de la Loi, le prédicateur a besoin de sa tablette de la prédication !",
+    "icon": "https://preachpad.geekarea.fr/app-icon.svg",
+    "version": "5.5.2"
+  },
+  {
+    "url": "https://parentpeace.geekarea.fr/",
+    "name": "ParentPeace",
+    "description": "Pour retrouver quiétude et sérénité, mesurez le niveau sonore et laissez le « bonhomme pas content » gronder vos enfants à votre place.",
+    "icon": "https://parentpeace.geekarea.fr/app-icon.svg",
+    "version": "0.4.0"
+  },
+  {
+    "url": "https://preachboard.geekarea.fr/",
+    "name": "PreachBoard",
+    "description": "Comme dirait Paul, le « data-driven » et les retours d'utilisateurs sont utiles à peu de choses, mais peu de choses, ce n'est pas rien ! (Accès limité)",
+    "icon": "https://preachboard.geekarea.fr/app-icon.svg",
+    "version": "0.0.1"
+  },
+  {
+    "url": "https://proverbseed.geekarea.fr/",
+    "name": "ProverbSeed",
+    "description": "Comment lire le livre des Proverbes ? Une petite graine à la fois. À la base, ils sont dispersés et on passe d'un thème à l'autre. En les méditant et les triant, vous vous imprégnerez de la sagesse de Dieu.",
+    "icon": "https://proverbseed.geekarea.fr/app-icon.svg",
+    "version": "1.0.0"
+  }
+]

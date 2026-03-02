@@ -88,81 +88,7 @@
 
         <!-- Gallery Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-900 border border-zinc-900" id="gallery">
-            
-            <!-- App 1: PreachPad -->
-            <div class="app-card group relative p-16 flex flex-col min-h-[650px]" data-app-url="https://preachpad.geekarea.fr/">
-                <div class="relative w-40 h-40 mb-20 flex items-center justify-center border border-zinc-800 bg-zinc-950">
-                    <img class="app-icon w-32 h-32 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700" alt="PreachPad">
-                </div>
-
-                <h2 class="text-5xl font-light mb-8 serif italic">PreachPad</h2>
-                <p class="text-zinc-500 font-light leading-relaxed mb-16 flex-grow text-xl max-w-md">
-                    Tel Moïse qui descendait du mont Sinaï avec les tables de la Loi, le prédicateur a besoin de sa tablette de la prédication !
-                </p>
-
-                <div class="flex items-end justify-between border-t border-zinc-800 pt-10">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] tracking-[0.4em] uppercase text-zinc-700 mb-2">Build Status</span>
-                        <span class="text-xs tracking-widest uppercase text-zinc-400 version-label version-tag">Syncing...</span>
-                    </div>
-                    <a href="https://preachpad.geekarea.fr/" target="_blank" class="border border-white px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-black transition-all duration-300">
-                        Accéder
-                    </a>
-                </div>
-            </div>
-
-            <!-- App 2: ParentPeace -->
-            <div class="app-card group relative p-16 flex flex-col min-h-[650px]" data-app-url="https://parentpeace.geekarea.fr/">
-                <div class="relative w-40 h-40 mb-20 flex items-center justify-center border border-zinc-800 bg-zinc-950">
-                    <img class="app-icon w-32 h-32 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700" alt="ParentPeace">
-                </div>
-
-                <h2 class="text-5xl font-light mb-8 serif italic">ParentPeace</h2>
-                <p class="text-zinc-500 font-light leading-relaxed mb-16 flex-grow text-xl max-w-md">
-                    Pour retrouver quiétude et sérénité, mesurez le niveau sonore et laissez le « bonhomme pas content » gronder vos enfants à votre place.
-                </p>
-
-                <div class="flex items-end justify-between border-t border-zinc-800 pt-10">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] tracking-[0.4em] uppercase text-zinc-700 mb-2">Build Status</span>
-                        <span class="text-xs tracking-widest uppercase text-zinc-400 version-label version-tag">Syncing...</span>
-                    </div>
-                    <a href="https://parentpeace.geekarea.fr/" target="_blank" class="border border-white px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-black transition-all duration-300">
-                        Accéder
-                    </a>
-                </div>
-            </div>
-
-            <!-- App 3: PreachBoard -->
-            <div class="app-card group relative p-16 flex flex-col min-h-[650px]" data-app-url="https://preachboard.geekarea.fr/">
-                <div class="relative w-40 h-40 mb-20 flex items-center justify-center border border-zinc-800 bg-zinc-950">
-                    <img class="app-icon w-32 h-32 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700" alt="PreachBoard">
-                </div>
-
-                <h2 class="text-5xl font-light mb-8 serif italic">PreachBoard</h2>
-                <p class="text-zinc-500 font-light leading-relaxed mb-16 flex-grow text-xl max-w-md">
-                    Comme dirait Paul, le « data-driven » et les retours d'utilisateurs sont utiles à peu de choses, mais peu de choses, ce n'est pas rien ! (Accès limité)
-                </p>
-
-                <div class="flex items-end justify-between border-t border-zinc-800 pt-10">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] tracking-[0.4em] uppercase text-zinc-700 mb-2">Build Status</span>
-                        <span class="text-xs tracking-widest uppercase text-zinc-400 version-label version-tag">Syncing...</span>
-                    </div>
-                    <a href="https://preachboard.geekarea.fr/" target="_blank" class="border border-white px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-black transition-all duration-300">
-                        Accéder
-                    </a>
-                </div>
-            </div>
-
-            <!-- Future Slot -->
-            <div class="app-card p-16 flex items-center justify-center min-h-[400px] opacity-10">
-                <div class="text-center">
-                    <span class="serif italic text-3xl text-zinc-500 block mb-4">In Conceptu</span>
-                    <div class="w-12 h-[1px] bg-zinc-800 mx-auto"></div>
-                </div>
-            </div>
-
+            <!-- Apps will be loaded here -->
         </div>
 
         <footer class="mt-60 flex flex-col md:flex-row justify-between items-end gap-16 border-t border-zinc-900 pt-20">
@@ -186,69 +112,66 @@
             spotlight.style.setProperty('--y', `${y}%`);
         });
 
-        async function updateGallery() {
-            const cards = document.querySelectorAll('[data-app-url]');
-            
-            for (const card of cards) {
-                const url = card.getAttribute('data-app-url');
-                const img = card.querySelector('.app-icon');
-                const versionLabel = card.querySelector('.version-label');
+        async function loadApps() {
+            const gallery = document.getElementById('gallery');
+            try {
+                const response = await fetch('apps.json');
+                const apps = await response.json();
                 
-                // Priorité aux chemins demandés : app-icon.svg
-                const iconPaths = [
-                    'app-icon.svg',
-                    'apple-touch-icon.png',
-                    'icons/icon-512x512.png',
-                    'favicon.svg',
-                    'favicon.ico'
-                ];
+                gallery.innerHTML = ''; // Clear gallery
 
-                const tryFetchIcon = async (index) => {
-                    if (index >= iconPaths.length) return;
+                apps.forEach(app => {
+                    const card = document.createElement('div');
+                    card.className = 'app-card group relative p-16 flex flex-col min-h-[650px]';
                     
-                    const fullUrl = `${url}${iconPaths[index]}`;
-                    const imgTest = new Image();
-                    imgTest.crossOrigin = "anonymous";
-                    
-                    imgTest.onload = () => { 
-                        img.src = fullUrl; 
-                        console.log(`Icon trouvée: ${fullUrl}`);
-                    };
-                    imgTest.onerror = () => tryFetchIcon(index + 1);
-                    imgTest.src = fullUrl;
-                };
+                    const iconUrl = app.icon || 'favicon.ico';
+                    const versionText = app.version ? `Release ${app.version}` : "Deploy Stable";
 
-                tryFetchIcon(0);
+                    card.innerHTML = `
+                        <div class="relative w-40 h-40 mb-20 flex items-center justify-center border border-zinc-800 bg-zinc-950">
+                            <img class="app-icon w-32 h-32 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700" 
+                                 src="${iconUrl}" alt="${app.name}">
+                        </div>
 
-                // Priorité à version.json
-                const ts = new Date().getTime();
-                const metaFiles = ['version.json', 'package.json', 'manifest.json'];
-                let versionFound = null;
+                        <h2 class="text-5xl font-light mb-8 serif italic">${app.name}</h2>
+                        <p class="text-zinc-500 font-light leading-relaxed mb-16 flex-grow text-xl max-w-md">
+                            ${app.description}
+                        </p>
 
-                for (const file of metaFiles) {
-                    try {
-                        const response = await fetch(`${url}${file}?v=${ts}`, { 
-                            mode: 'cors', 
-                            cache: 'no-store' 
-                        });
-                        if (response.ok) {
-                            const data = await response.json();
-                            versionFound = data.version || 
-                                           (data.info && data.info.version) || 
-                                           data.appVersion;
-                            if (versionFound) {
-                                console.log(`Version trouvée dans ${file}: ${versionFound}`);
-                                break;
-                            }
-                        }
-                    } catch (e) {}
+                        <div class="flex items-end justify-between border-t border-zinc-800 pt-10">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] tracking-[0.4em] uppercase text-zinc-700 mb-2">Build Status</span>
+                                <span class="text-xs tracking-widest uppercase text-zinc-400 version-tag">${versionText}</span>
+                            </div>
+                            <a href="${app.url}" target="_blank" class="border border-white px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-black transition-all duration-300">
+                                Accéder
+                            </a>
+                        </div>
+                    `;
+                    gallery.appendChild(card);
+                });
+
+                // Add Future Slot tracker if odd number or just one
+                if (apps.length % 2 !== 0 || apps.length === 0) {
+                    const futureSlot = document.createElement('div');
+                    futureSlot.className = 'app-card p-16 flex items-center justify-center min-h-[400px] opacity-10';
+                    futureSlot.innerHTML = `
+                        <div class="text-center">
+                            <span class="serif italic text-3xl text-zinc-500 block mb-4">In Conceptu</span>
+                            <div class="w-12 h-[1px] bg-zinc-800 mx-auto"></div>
+                        </div>
+                    `;
+                    gallery.appendChild(futureSlot);
                 }
 
-                versionLabel.textContent = versionFound ? `Release ${versionFound}` : "Deploy Stable";
+            } catch (error) {
+                console.error("Erreur lors du chargement des applications :", error);
+                gallery.innerHTML = '<p class="p-16 text-zinc-500">Impossible de charger la collection.</p>';
             }
         }
 
-        window.onload = updateGallery;
+        window.onload = loadApps;
     </script>
+
 </body>
 </html>

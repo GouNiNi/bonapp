@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galerie Minimaliste</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
             --card-bg: rgba(15, 15, 15, 0.6);
             --accent: #ffffff;
         }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
             color: var(--accent);
             overflow-x: hidden;
         }
-        .serif { font-family: 'Playfair Display', serif; }
-        
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
         .noise {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             opacity: 0.04;
             z-index: 9999;
@@ -31,20 +43,23 @@
 
         .spotlight {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.03) 0%, transparent 60%);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.03) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
 
         .app-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.03);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .app-card:hover {
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(255, 255, 255, 0.1);
             background: rgba(20, 20, 20, 0.8);
             transform: translateY(-4px);
         }
@@ -54,8 +69,15 @@
         }
 
         @keyframes reveal {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .version-tag {
@@ -63,22 +85,24 @@
         }
     </style>
 </head>
+
 <body class="antialiased">
     <div class="noise"></div>
     <div class="spotlight" id="spotlight"></div>
 
     <main class="relative z-10 max-w-[1400px] mx-auto px-6 md:px-20 pt-32 pb-32">
-        
+
         <!-- Hero Monumental -->
         <section class="mb-48 max-w-5xl">
             <h1 class="text-7xl md:text-9xl font-extralight tracking-tighter reveal-text leading-none uppercase">
                 BON <br><span class="serif italic lowercase tracking-normal">app</span>.
             </h1>
             <div class="mt-16 h-[2px] w-32 bg-white reveal-text" style="animation-delay: 0.2s;"></div>
-            
+
             <div class="mt-16 reveal-text" style="animation-delay: 0.4s;">
                 <p class="text-zinc-500 text-2xl md:text-3xl font-light leading-snug max-w-3xl mb-8">
-                    100% pas fait main, des app sur mesure conçues par l'intelligence des ordinateurs de l'internet mondial.
+                    100% pas fait main, des app sur mesure conçues par l'intelligence des ordinateurs de l'internet
+                    mondial.
                 </p>
                 <p class="serif italic text-zinc-400 text-xl md:text-2xl leading-relaxed max-w-2xl">
                     La plupart sont des web app que votre navigateur peut installer sur votre écran d'accueil (des PWA).
@@ -117,13 +141,13 @@
             try {
                 const response = await fetch('apps.json');
                 const apps = await response.json();
-                
+
                 gallery.innerHTML = ''; // Clear gallery
 
                 apps.forEach(app => {
                     const card = document.createElement('div');
                     card.className = 'app-card group relative p-16 flex flex-col min-h-[650px]';
-                    
+
                     const iconUrl = app.icon || 'favicon.ico';
                     const versionText = app.version ? `Release ${app.version}` : "Deploy Stable";
 
@@ -174,4 +198,5 @@
     </script>
 
 </body>
+
 </html>

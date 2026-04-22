@@ -15,19 +15,28 @@ services:
       - proxy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.bonapp.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      # HTTPS Router
+      - traefik.http.routers.bonapp.rule=Host("${SUBDOMAIN}.${DOMAIN_NAME}")
       - traefik.http.routers.bonapp.tls=true
       - traefik.http.routers.bonapp.entrypoints=websecure
       - traefik.http.routers.bonapp.tls.certresolver=letsencrypt
-      - traefik.http.middlewares.bonapp.headers.SSLRedirect=true
-      - traefik.http.middlewares.bonapp.headers.STSSeconds=315360000
-      - traefik.http.middlewares.bonapp.headers.browserXSSFilter=true
-      - traefik.http.middlewares.bonapp.headers.contentTypeNosniff=true
-      - traefik.http.middlewares.bonapp.headers.forceSTSHeader=true
-      - traefik.http.middlewares.bonapp.headers.SSLHost=${DOMAIN_NAME}
-      - traefik.http.middlewares.bonapp.headers.STSIncludeSubdomains=true
-      - traefik.http.middlewares.bonapp.headers.STSPreload=true
-      - traefik.http.routers.bonapp.middlewares=bonapp@docker
+      - traefik.http.routers.bonapp.middlewares=bonapp-headers@docker
+      # HTTP Router (Redirection to HTTPS + Canonical Host)
+      - traefik.http.routers.bonapp-http.rule=Host("${SUBDOMAIN}.${DOMAIN_NAME}")
+      - traefik.http.routers.bonapp-http.entrypoints=web
+      - traefik.http.routers.bonapp-http.middlewares=bonapp-redirect@docker
+      # Redirection Middleware: HTTPS + SSLHost replacement
+      - traefik.http.middlewares.bonapp-redirect.redirectregex.regex=^https?://(?:.*)/(.*)
+      - traefik.http.middlewares.bonapp-redirect.redirectregex.replacement=https://${DOMAIN_NAME}/$${1}
+      - traefik.http.middlewares.bonapp-redirect.redirectregex.permanent=true
+      # Headers Middleware: STS and Security Headers (v3 compatible)
+      - traefik.http.middlewares.bonapp-headers.headers.stsSeconds=315360000
+      - traefik.http.middlewares.bonapp-headers.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.bonapp-headers.headers.stsPreload=true
+      - traefik.http.middlewares.bonapp-headers.headers.forceSTSHeader=true
+      - traefik.http.middlewares.bonapp-headers.headers.customResponseHeaders.X-Content-Type-Options=nosniff
+      - traefik.http.middlewares.bonapp-headers.headers.customResponseHeaders.X-XSS-Protection=1; mode=block
+      # Service Port
       - traefik.http.services.bonapp.loadbalancer.server.port=80
 
 networks:

@@ -20,6 +20,7 @@ services:
       - proxy
     labels:
       - traefik.enable=true
+      - traefik.docker.allownonrunning=true
       # HTTPS Router
       - traefik.http.routers.bonapp.rule=Host("${SUBDOMAIN}.${DOMAIN_NAME}")
       - traefik.http.routers.bonapp.tls=true

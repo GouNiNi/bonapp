@@ -20,7 +20,7 @@ services:
       - traefik.http.routers.bonapp.tls=true
       - traefik.http.routers.bonapp.entrypoints=websecure
       - traefik.http.routers.bonapp.tls.certresolver=letsencrypt
-      - traefik.http.routers.bonapp.middlewares=bonapp-headers@docker
+      - traefik.http.routers.bonapp.middlewares=bonapp-headers@docker,bonapp-sablier@docker
       # HTTP Router (Redirection to HTTPS + Canonical Host)
       - traefik.http.routers.bonapp-http.rule=Host("${SUBDOMAIN}.${DOMAIN_NAME}")
       - traefik.http.routers.bonapp-http.entrypoints=web
@@ -38,6 +38,15 @@ services:
       - traefik.http.middlewares.bonapp-headers.headers.customResponseHeaders.X-XSS-Protection=1; mode=block
       # Service Port
       - traefik.http.services.bonapp.loadbalancer.server.port=80
+      # Sablier Plugin Configuration
+      - sablier.enable=true
+      - sablier.group=bonapp
+      - traefik.http.middlewares.bonapp-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+      - traefik.http.middlewares.bonapp-sablier.plugin.sablier.names=bonapp
+      - traefik.http.middlewares.bonapp-sablier.plugin.sablier.sessionDuration=5m
+      # Mode Page d'attente (Dynamic)
+      - traefik.http.middlewares.bonapp-sablier.plugin.sablier.dynamic.theme=ghost
+      - traefik.http.middlewares.bonapp-sablier.plugin.sablier.dynamic.showDetails=true
 
 networks:
   proxy:

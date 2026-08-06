@@ -11,6 +11,11 @@ services:
     # Debug: Teste la configuration avant de lancer
     command: sh -c "nginx -t && nginx -g 'daemon off;'"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - proxy
     labels:

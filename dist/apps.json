@@ -22,7 +22,7 @@
     "name": "PreachSlide",
     "repo": "preachslide",
     "url": "https://preachslide.geekarea.fr/",
-    "description": "Application interactive de projection et synchronisation de diapositives pour la prédication.",
+    "description": "Fini la zappette, fini d'être perdu dans ses slides et désynchronisé du discours. Les slides c'est comme le reste, ça se programme et ensuite, tu s'occupe de rien. (App à brancher avec PreachPad)",
     "version": "1.1.20",
     "icon": "icons/preachslide.svg"
   },
@@ -40,7 +40,7 @@
     "name": "VoiceMixer",
     "repo": "voicemixer",
     "url": "https://voicemixer.geekarea.fr/",
-    "description": "Console et table de mixage audio PWA optimisée pour tablette avec gestion des pistes voix et effets sonores.",
+    "description": "Quand mon fils fait ses premiers pas en vibecoding pour enregistrer ses sample de beatbox.",
     "version": "4.7.0",
     "icon": "icons/voicemixer.png"
   }

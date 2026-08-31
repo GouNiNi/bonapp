@@ -154,7 +154,7 @@
                     card.innerHTML = `
                         <div class="relative w-40 h-40 mb-20 flex items-center justify-center border border-zinc-800 bg-zinc-950">
                             <img class="app-icon w-32 h-32 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700" 
-                                 src="${iconUrl}" alt="${app.name}">
+                                 src="${iconUrl}" alt="${app.name}" onerror="this.onerror=null; this.src='favicon.ico';">
                         </div>
 
                         <h2 class="text-5xl font-light mb-8 serif italic">${app.name}</h2>

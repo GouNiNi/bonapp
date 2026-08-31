@@ -6,7 +6,7 @@
     "url": "https://parentpeace.geekarea.fr/",
     "description": "Pour retrouver quiétude et sérénité, mesurez le niveau sonore et laissez le « bonhomme pas content » gronder vos enfants à votre place.",
     "version": "0.4.0",
-    "icon": "https://parentpeace.geekarea.fr/pwa-192x192.png"
+    "icon": "icons/parentpeace.png"
   },
   {
     "id": "preachpad",
@@ -15,7 +15,7 @@
     "url": "https://preachpad.geekarea.fr/",
     "description": "Tel Moïse qui descendait du mont Sinaï avec les tables de la Loi, le prédicateur a besoin de sa tablette de la prédication !",
     "version": "7.1.3",
-    "icon": "https://preachpad.geekarea.fr/icons/icon-192x192.png"
+    "icon": "icons/preachpad.png"
   },
   {
     "id": "preachslide",
@@ -24,7 +24,7 @@
     "url": "https://preachslide.geekarea.fr/",
     "description": "Application interactive de projection et synchronisation de diapositives pour la prédication.",
     "version": "1.1.20",
-    "icon": "https://preachslide.geekarea.fr/favicon.svg"
+    "icon": "icons/preachslide.svg"
   },
   {
     "id": "proverbseed",
@@ -33,7 +33,7 @@
     "url": "https://proverbseed.geekarea.fr/",
     "description": "Comment lire le livre des Proverbes ? Une petite graine à la fois. Méditez et triez les proverbes pour vous imprégner de la sagesse de Dieu.",
     "version": "1.7.0",
-    "icon": "https://proverbseed.geekarea.fr/pwa-192x192.png"
+    "icon": "icons/proverbseed.png"
   },
   {
     "id": "voicemixer",
@@ -42,6 +42,6 @@
     "url": "https://voicemixer.geekarea.fr/",
     "description": "Console et table de mixage audio PWA optimisée pour tablette avec gestion des pistes voix et effets sonores.",
     "version": "4.7.0",
-    "icon": "https://voicemixer.geekarea.fr/icon-192.png"
+    "icon": "icons/voicemixer.png"
   }
 ]

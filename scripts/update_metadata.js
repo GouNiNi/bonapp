@@ -3,8 +3,13 @@ const path = require('path');
 
 const CONFIG_FILE = path.join(__dirname, '../apps.config.json');
 const APPS_FILE = path.join(__dirname, '../dist/apps.json');
+const ICONS_DIR = path.join(__dirname, '../dist/icons');
 
 async function updateMetadata() {
+    if (!fs.existsSync(ICONS_DIR)) {
+        fs.mkdirSync(ICONS_DIR, { recursive: true });
+    }
+
     let appDeclarations = [];
     if (fs.existsSync(CONFIG_FILE)) {
         appDeclarations = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
@@ -16,16 +21,16 @@ async function updateMetadata() {
     appDeclarations.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
 
     const iconPaths = [
-        'app-icon.svg',
         'pwa-192x192.png',
         'icons/icon-192x192.png',
         'icon-192.png',
-        'pwa-512x512.png',
-        'icon-512.png',
         'apple-touch-icon.png',
-        'icons/icon-512x512.png',
         'favicon.svg',
         'favicon.png',
+        'pwa-512x512.png',
+        'icons/icon-512x512.png',
+        'icon-512.png',
+        'app-icon.svg',
         'favicon.ico'
     ];
 
@@ -90,38 +95,54 @@ async function updateMetadata() {
             }
         }
 
-        // 2. Resolve Icon (local verification or standard path probe)
+        // 2. Resolve & Bundle Icon locally into dist/icons/
         item.icon = null;
+        let localIconFound = null;
+
         if (repoDir && fs.existsSync(repoDir)) {
             const searchLocations = [
                 path.join(repoDir, 'public'),
                 path.join(repoDir, 'frontend/public'),
                 path.join(repoDir, 'dist'),
+                path.join(repoDir, 'frontend/dist'),
                 repoDir
             ];
             for (const iconPath of iconPaths) {
                 for (const loc of searchLocations) {
                     const fullIconPath = path.join(loc, iconPath);
                     if (fs.existsSync(fullIconPath)) {
-                        item.icon = `${item.url.replace(/\/$/, '')}/${iconPath}`;
-                        console.log(`  Found icon locally: ${iconPath} -> ${item.icon}`);
+                        localIconFound = fullIconPath;
+                        console.log(`  Found icon locally: ${iconPath} at ${fullIconPath}`);
                         break;
                     }
                 }
-                if (item.icon) break;
+                if (localIconFound) break;
             }
         }
 
-        if (!item.icon && item.url) {
+        if (localIconFound) {
+            const ext = path.extname(localIconFound) || '.png';
+            const destFilename = `${item.id}${ext}`;
+            const destPath = path.join(ICONS_DIR, destFilename);
+            fs.copyFileSync(localIconFound, destPath);
+            item.icon = `icons/${destFilename}`;
+            console.log(`  Bundled icon to: ${item.icon}`);
+        } else if (item.url) {
+            // Remote download fallback
             for (const iconPath of iconPaths) {
                 try {
                     const iconUrl = `${item.url.replace(/\/$/, '')}/${iconPath}`;
                     const response = await fetch(iconUrl, { method: 'GET' });
                     if (response.ok) {
-                        const contentType = response.headers.get('content-type');
-                        if (contentType && (contentType.includes('image') || contentType.includes('svg'))) {
-                            item.icon = iconUrl;
-                            console.log(`  Found icon remotely: ${iconUrl} (${contentType})`);
+                        const contentType = response.headers.get('content-type') || '';
+                        if (contentType.includes('image') || contentType.includes('svg')) {
+                            const buffer = Buffer.from(await response.arrayBuffer());
+                            const ext = path.extname(iconPath) || (contentType.includes('svg') ? '.svg' : '.png');
+                            const destFilename = `${item.id}${ext}`;
+                            const destPath = path.join(ICONS_DIR, destFilename);
+                            fs.writeFileSync(destPath, buffer);
+                            item.icon = `icons/${destFilename}`;
+                            console.log(`  Downloaded and bundled remote icon: ${item.icon}`);
                             break;
                         }
                     }
@@ -130,8 +151,8 @@ async function updateMetadata() {
         }
 
         // Fallback default icon if none found
-        if (!item.icon && item.url) {
-            item.icon = `${item.url.replace(/\/$/, '')}/favicon.ico`;
+        if (!item.icon) {
+            item.icon = 'favicon.ico';
         }
 
         updatedApps.push(item);
